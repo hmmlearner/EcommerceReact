@@ -1,0 +1,13 @@
+.productcard {
+    display: inline-block;
+    width: 350px;
+    margin: 2rem;
+    height:400px;
+}
+
+    .productcard img {
+        width: auto; /* Set the width as per your requirement */
+        height: 250px;
+        object-fit: cover;
+        border-radius: 6px;
+    }

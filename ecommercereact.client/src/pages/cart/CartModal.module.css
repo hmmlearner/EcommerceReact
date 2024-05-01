@@ -1,0 +1,11 @@
+.cartContainer {
+    display: flex;
+    flex-flow: column;
+    z-index: 100;
+}
+
+.closeButton {
+    align-self: end;
+    top: -20px;
+    right: -30px;
+}
