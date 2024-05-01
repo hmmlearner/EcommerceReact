@@ -1,5 +1,8 @@
 # EcommerceReact
 
+This is a basic Ecommerce application with backend built on .Net Core 7 and react front end, SQLExpress for DB.
+This application uses JWT authentication for customer login and Stripe for payments. 
+
 ## Fork the repository
  1. Make sure in solution properties 'Multiple startup projects' are selected
 
