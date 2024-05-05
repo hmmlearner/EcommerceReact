@@ -19,6 +19,7 @@ const style = {
 
 const CartModal = forwardRef(({ cartOpen }, ref) => {
 
+    CartModal.displayName = 'MyComponent';
     const modal = useRef();
 
     useImperativeHandle(ref, () => {

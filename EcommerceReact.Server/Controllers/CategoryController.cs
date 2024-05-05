@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceReact.Server.Controllers
 {
+
+    /// <summary>
+    /// Controller for managing categories for products.
+    /// </summary>
     [ApiController]
     [Route("api/category")]
     public class CategoryController : Controller
@@ -22,10 +26,11 @@ namespace EcommerceReact.Server.Controllers
             _productRepository = productRepository;
         }
 
-
-       
-
-
+        /// <summary>
+        /// Retrieves a category by its name.
+        /// </summary>
+        /// <param name="name">The name of the category.</param>
+        /// <returns>The category information.</returns>
         [Route("{name}")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<CategoryRetrieveDto>>> GetCategory(string name)
@@ -42,6 +47,11 @@ namespace EcommerceReact.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the products of a category by its name.
+        /// </summary>
+        /// <param name="name">The name of the category.</param>
+        /// <returns>The category products information.</returns>
         [Route("{name}/products")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<CategoryProductsRetrieveDto>>> GetCategoryProducts(string name)
@@ -49,17 +59,10 @@ namespace EcommerceReact.Server.Controllers
             try
             {
                 var categoryResponse = await _categoryRepository.GetCategoryByName(name);
-                if(categoryResponse == null) 
+                if (categoryResponse == null)
                     return NotFound();
                 int categoryid = categoryResponse.Data.Id;
                 var categoryProductsResponse = await _productRepository.GetProductsByCategory(categoryid);
-                //var categoryProducts = new CategoryProductsRetrieveDto()
-                //{
-                //    Id = categoryid,
-                //    Name = categoryResponse.Data.Name,
-                //    DisplayOrder = categoryResponse.Data.DisplayOrder,
-                //    Products = categoryProductsResponse.Data
-                //};
 
                 return categoryProductsResponse == null ? NotFound() : Ok(categoryProductsResponse);
             }
@@ -70,7 +73,10 @@ namespace EcommerceReact.Server.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Retrieves all categories.
+        /// </summary>
+        /// <returns>All categories information.</returns>
         [Route("All")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<CategoryRetrieveDto>>> GetAllCategories()
@@ -88,7 +94,11 @@ namespace EcommerceReact.Server.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Creates a new category.
+        /// </summary>
+        /// <param name="categorydto">The category data.</param>
+        /// <returns>The created category information.</returns>
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<CategoryRetrieveDto>>> CreateCategory([FromBody] CategoryCreateDto categorydto)
         {

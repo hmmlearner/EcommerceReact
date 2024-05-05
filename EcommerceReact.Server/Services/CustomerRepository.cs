@@ -12,6 +12,9 @@ using System.Text;
 
 namespace EcommerceReact.Server.Services
 {
+    /// <summary>
+    /// Represents a repository for managing customer data.
+    /// </summary>
     public class CustomerRepository : ICustomerRepository
     {
         private readonly DataContext _dataContext;
@@ -26,6 +29,11 @@ namespace EcommerceReact.Server.Services
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
+        /// <summary>
+        /// Creates a new customer in the database.
+        /// </summary>
+        /// <param name="customerdto">The customer data to create.</param>
+        /// <returns>A service response containing the created customer data.</returns>
         public async Task<ServiceResponse<CustomerRetrieveDto>> CreateCustomer(CustomerCreateDto customerdto)
         {
             var serviceReponse = new ServiceResponse<CustomerRetrieveDto>();
@@ -59,18 +67,24 @@ namespace EcommerceReact.Server.Services
             return false;
         }
 
+        /// <summary>
+        /// Logs in a customer with the specified email and password.
+        /// </summary>
+        /// <param name="email">The email of the customer.</param>
+        /// <param name="password">The password of the customer.</param>
+        /// <returns>A service response containing the logged in customer data.</returns>
         public async Task<ServiceResponse<CustomerRetrieveDto>> CustomerLogin(string email, string password)
         {
             var serviceReponse = new ServiceResponse<CustomerRetrieveDto>();
             var customer = await _dataContext.Customers.SingleOrDefaultAsync(x => x.Email == email);
-            if(customer == null) 
+            if (customer == null)
             {
                 serviceReponse.StatusCode = 401;
                 serviceReponse.Success = false;
                 serviceReponse.StatusMessage = "User Not Found";// user not found
                 return serviceReponse;
             }
-            if(VerifyPassword(password, customer.Password, customer.Saltkey))
+            if (VerifyPassword(password, customer.Password, customer.Saltkey))
             {
                 serviceReponse.Data = _mapper.Map<CustomerRetrieveDto>(customer);
                 serviceReponse.Data.Token = CreateToken(customer);
@@ -83,6 +97,11 @@ namespace EcommerceReact.Server.Services
             return serviceReponse;
         }
 
+        /// <summary>
+        /// Retrieves a customer from the database by email.
+        /// </summary>
+        /// <param name="email">The email of the customer.</param>
+        /// <returns>A service response containing the retrieved customer data.</returns>
         public async Task<ServiceResponse<CustomerRetrieveDto>> GetCustomerByEmail(string email)
         {
             var serviceResponse = new ServiceResponse<CustomerRetrieveDto>();
@@ -91,6 +110,11 @@ namespace EcommerceReact.Server.Services
             return serviceResponse;
         }
 
+        /// <summary>
+        /// Retrieves a customer from the database by ID.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>A service response containing the retrieved customer data.</returns>
         public async Task<ServiceResponse<CustomerRetrieveDto>> GetCustomerById(int id)
         {
             var serviceResponse = new ServiceResponse<CustomerRetrieveDto>();
@@ -103,7 +127,12 @@ namespace EcommerceReact.Server.Services
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Creates the password hash and salt for the customer's password.
+        /// </summary>
+        /// <param name="password">The password to hash.</param>
+        /// <param name="passwordHash">The generated password hash.</param>
+        /// <param name="passwordSalt">The generated password salt.</param>
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using(var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -113,6 +142,13 @@ namespace EcommerceReact.Server.Services
             }
         }
 
+        /// <summary>
+        /// Verifies the password of a customer.
+        /// </summary>
+        /// <param name="password">The password to verify.</param>
+        /// <param name="passwordHash">The password hash stored in the database.</param>
+        /// <param name="passwordSalt">The password salt stored in the database.</param>
+        /// <returns>True if the password is verified, otherwise false.</returns>
         private bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
@@ -121,7 +157,11 @@ namespace EcommerceReact.Server.Services
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
-
+        /// <summary>
+        /// Creates a JWT token for the specified customer.
+        /// </summary>
+        /// <param name="customer">The customer for whom to create the token.</param>
+        /// <returns>The JWT token.</returns>
         private string CreateToken(Customer customer)
         {
 
@@ -152,6 +192,10 @@ namespace EcommerceReact.Server.Services
             return int.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
+        /// <summary>
+        /// Retrieves a customer from the database by ID.
+        /// </summary>
+        /// <returns>A service response containing the retrieved customer data.</returns>
         public async Task<ServiceResponse<CustomerRetrieveDto>> RetrieveCustomer()
         {
             var customerId = GetCustomerID();

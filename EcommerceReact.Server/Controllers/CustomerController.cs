@@ -9,7 +9,11 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace EcommerceReact.Server.Controllers
 {
-    //[Authorize]
+
+
+    /// <summary>
+    /// Controller for managing customer-related operations.
+    /// </summary>
     [ApiController]
     [Route("api/customer")]
     public class CustomerController : ControllerBase
@@ -17,12 +21,17 @@ namespace EcommerceReact.Server.Controllers
         private readonly ILogger<Customer> _logger;
         private readonly ICustomerRepository _customerRepository;
 
-        public CustomerController(ILogger<Customer> logger, ICustomerRepository customerRepository)  
-        { 
+        public CustomerController(ILogger<Customer> logger, ICustomerRepository customerRepository)
+        {
             _logger = logger;
             _customerRepository = customerRepository;
         }
 
+        /// <summary>
+        /// Creates a new customer.
+        /// </summary>
+        /// <param name="customer">The customer data.</param>
+        /// <returns>The created customer.</returns>
         [HttpPost]
         [Route("CreateCustomer")]
         public async Task<ActionResult<ServiceResponse<CustomerRetrieveDto>>> CreateCustomer([FromBody] CustomerCreateDto customer)
@@ -33,18 +42,22 @@ namespace EcommerceReact.Server.Controllers
                 return (newCustomerReponse == null) ? BadRequest("Couldn't create customer") : Ok(newCustomerReponse);
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest($"Couldn't create customer {ex.Message}");
             }
         }
 
+        /// <summary>
+        /// Logs in a customer.
+        /// </summary>
+        /// <param name="m">The login form data.</param>
+        /// <returns>The logged in customer.</returns>
         [HttpPost]
         [Route("Login")]
-        //prathimac@gmail.com, Test_12
-        //public async Task<ActionResult<ServiceResponse<CustomerRetrieveDto>>> CustomerLogin(string username, string password)
         public async Task<ActionResult<ServiceResponse<CustomerRetrieveDto>>> CustomerLogin([FromBody] LoginFormDto m)
         {
-            if(!m.IsValid())
+            if (!m.IsValid())
             {
                 return BadRequest("Invalid login data");
             }
@@ -58,9 +71,14 @@ namespace EcommerceReact.Server.Controllers
             }
             catch (Exception ex)
             {
-                return Unauthorized($"Invalid Credentials { ex.Message}");
+                return Unauthorized($"Invalid Credentials {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// Retrieves the customer data.
+        /// </summary>
+        /// <returns>The customer data.</returns>
         [Route("retrievecustomer")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<CustomerRetrieveDto>>> RetrieveCustomer()
@@ -76,23 +94,5 @@ namespace EcommerceReact.Server.Controllers
                 return BadRequest($"Couldn't retrieve cart {ex.Message}");
             }
         }
-
-        ////Create CustomerLogout API method
-        //[HttpPost]
-        //[Route("Logout")]
-        //public async IActionResult CustomerLogout()
-        //{
-        //    try
-        //    {
-        //        var logoutCustomerReponse = await _customerRepository.CustomerLogout();
-        //        return Ok(new { message = "Logout successful" });
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Unauthorized($"Invalid Credentials { ex.Message}");
-        //    }
-        //}
-
     }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import React, { useReducer, useEffect } from 'react';
 import CartContext from './cart-context';
 import agent from "../api/agent";

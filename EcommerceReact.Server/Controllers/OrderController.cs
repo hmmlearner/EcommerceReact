@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceReact.Server.Controllers
 {
+    
+    ///<summary>
+    /// Controller for managing orders.
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -22,6 +26,12 @@ namespace EcommerceReact.Server.Controllers
             _orderRepository = orderRepository;
         }
 
+        /// <summary>
+        /// Endpoint for confirming an order.
+        /// </summary>
+        /// <param name="orderNumber">The order number.</param>
+        /// <param name="sessionid">The session ID.</param>
+        /// <returns>The response containing the order confirmation details.</returns>
         [Route("OrderConfirmation")]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<OrderRetrieveDto>>> OrderConfirmation(int orderNumber, string sessionid)
@@ -37,6 +47,11 @@ namespace EcommerceReact.Server.Controllers
                 return BadRequest($"Couldn't submit order {ex.InnerException}");
             }
         }
+
+        /// <summary>
+        /// Endpoint for submitting an order.
+        /// </summary>
+        /// <returns>The response containing the payment submission details.</returns>
         [Route("OrderSubmit")]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<string>>> OrderSubmit()
@@ -61,6 +76,11 @@ namespace EcommerceReact.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for retrieving an order.
+        /// </summary>
+        /// <param name="orderNumber">The order number.</param>
+        /// <returns>The response containing the retrieved order details.</returns>
         [Route("RetrieveOrder")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<OrderRetrieveDto>>> RetrieveOrder(int orderNumber)

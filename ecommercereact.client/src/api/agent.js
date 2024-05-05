@@ -9,6 +9,7 @@ const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 axios.defaults.baseURL = "https://localhost:7076/api/";
 axios.defaults.withCredentials = true;
 const authToken = 'Bearer ' + getAuthToken();
+console.log("retrieve Authtoken " + authToken);
 
 const responseBody = (response) =>  response.data;
 
@@ -43,8 +44,9 @@ axios.interceptors.response.use(async response => {
 })
 
 const requests = {
+    
     //get: (url) => axios.get(url, { timeout: 5000 }).then(responseBody => console.log(responseBody)),
-    get: (url) => axios.get(url, { headers: { Authorization: authToken } }).then(responseBody ),
+    get: (url) => axios.get(url, { headers: { Authorization: authToken } }).then(responseBody) ,
     // post: (url, body) => axios.post(url, body, { headers: { Authorization: authToken, 'Content-Type': 'application/json' }}).then(responseBody),
     post: (url, body) => axios.post(url, body, { headers: { Authorization: authToken, 'Content-Type': 'application/json' } }).then(responseBody),
     put: (url, body) => axios.put(url, body).then(responseBody),
@@ -114,6 +116,7 @@ const Cart = {
         return requests.post(`cart/addToCart?productId=${productId}&quantity=${quantity}`, formdata)
     },
     retrieveCart: () => {
+        console.log('Bearer ' + getAuthToken());
         console.log("retrieveCart " + authToken);
      
             return requests.get("cart/retrievecart")

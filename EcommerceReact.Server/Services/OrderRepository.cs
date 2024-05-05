@@ -15,6 +15,7 @@ using Stripe.Issuing;
 
 namespace EcommerceReact.Server.Services
 {
+    
     public class OrderRepository : IOrderRepository
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

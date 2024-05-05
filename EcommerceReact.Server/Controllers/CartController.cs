@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceReact.Server.Controllers
 {
+    
+    ///<summary>
+    /// Controller for managing the shopping cart.
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/Cart")]
@@ -22,6 +26,12 @@ namespace EcommerceReact.Server.Controllers
             _shoppingCartRepository = shoppingCartRepository;
         }
 
+        /// <summary>
+        /// Adds a product to the shopping cart.
+        /// </summary>
+        /// <param name="productId">The ID of the product to add.</param>
+        /// <param name="quantity">The quantity of the product to add.</param>
+        /// <returns>The updated shopping cart.</returns>
         [Route("AddToCart")]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<ShoppingCartRetrieveDto>>> AddToCart(int productId, int quantity)
@@ -38,6 +48,10 @@ namespace EcommerceReact.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves the shopping cart.
+        /// </summary>
+        /// <returns>The shopping cart.</returns>
         [Route("RetrieveCart")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<ShoppingCartRetrieveDto>>> RetrieveCart()
@@ -54,6 +68,12 @@ namespace EcommerceReact.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes an item from the shopping cart.
+        /// </summary>
+        /// <param name="productId">The ID of the product to delete.</param>
+        /// <param name="quantity">The quantity of the product to delete.</param>
+        /// <returns>The updated shopping cart.</returns>
         [Route("DeleteItem")]
         [HttpDelete]
         public async Task<ActionResult<ServiceResponse<ShoppingCartRetrieveDto>>> DeleteItemFromCart(int productId, int quantity)
