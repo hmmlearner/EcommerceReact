@@ -33,7 +33,7 @@ namespace EcommerceReact.Server.Controllers
         /// <param name="customer">The customer data.</param>
         /// <returns>The created customer.</returns>
         [HttpPost]
-        [Route("CreateCustomer")]
+        [Route("createcustomer")]
         public async Task<ActionResult<ServiceResponse<CustomerRetrieveDto>>> CreateCustomer([FromBody] CustomerCreateDto customer)
         {
             try
@@ -54,7 +54,7 @@ namespace EcommerceReact.Server.Controllers
         /// <param name="m">The login form data.</param>
         /// <returns>The logged in customer.</returns>
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<ActionResult<ServiceResponse<CustomerRetrieveDto>>> CustomerLogin([FromBody] LoginFormDto m)
         {
             if (!m.IsValid())
@@ -79,6 +79,7 @@ namespace EcommerceReact.Server.Controllers
         /// Retrieves the customer data.
         /// </summary>
         /// <returns>The customer data.</returns>
+        [Authorize]
         [Route("retrievecustomer")]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<CustomerRetrieveDto>>> RetrieveCustomer()

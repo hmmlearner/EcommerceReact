@@ -86,7 +86,7 @@ namespace EcommerceReact.Server.Services
 
 
             //stripe settings 
-            var domain = "https://localhost:3000/";
+            var domain = "https://localhost:5173/";
             var checkoutSessionId = "{CHECKOUT_SESSION_ID}";
             var options = new SessionCreateOptions
             {
