@@ -40,7 +40,12 @@ jobs:
       run: |
             dotnet new tool-manifest
             dotnet tool install dotnet-ef
-      
+            
+    - name: Install NPM Dependencies
+      run: |
+           cd ecommercereact.client
+           npm i         
+          
     - name: Build
       run: dotnet build ./EcommerceReact.sln --configuration Release --no-restore
 
