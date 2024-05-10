@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Header.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import CartModal from "../../pages/cart/CartModal";
 import Button from '@mui/material/Button';
 /*import { createTheme, ThemeProvider } from "@mui/material/styles";*/
@@ -27,11 +27,13 @@ const Header = () => {
     //    active: 'active-class',
     //};
 
-    const cartCtx = useContext(CartContext);
+
     //const { loggedIn, name } = useContext(CustomerContext);
     const customerCtx = useContext(CustomerContext);
+    const cartCtx = useContext(CartContext);
 
     console.log("CustomerContext in Header " + JSON.stringify(customerCtx));
+    console.log("cartCtx in Header " + JSON.stringify(cartCtx));
     const loggedIn = customerCtx.loggedIn;
     const name = customerCtx.name;
     const [categories, setCategories] = useState([]);
@@ -56,6 +58,8 @@ const Header = () => {
          fetchCategoriesAsync();
     }, []);
 
+    const location = useLocation();
+    console.log(location.pathname +" "+ cartCtx.totalItems);
     const isNavLinkActive = (match, location) => !match;
     const openCartHandler = () => {
         // Call the onOpen method from the child component
@@ -95,7 +99,7 @@ const Header = () => {
                 </div>
                 <div className={classes.headerleft}>
                     {loggedIn ? <div>Hi, {customerCtx.name} <Button color="secondary" onClick={logoutHandler}> Log out</Button></div> : <div><Button color="secondary" onClick={openLoginHandler}> Login</Button>/<Button color="secondary" onClick={openSignUpHandler}>Sign Up</Button></div>}               
-                    <Button color="secondary" onClick={openCartHandler}>Cart ({cartCtx.totalItems})</Button>
+                    {location.pathname !== "/paymentconfirmation" ? <Button color="secondary" onClick={openCartHandler}>Cart ({cartCtx.totalItems})</Button> : ""}
                 </div>
             </header> 
             <nav className={classes.nav}>

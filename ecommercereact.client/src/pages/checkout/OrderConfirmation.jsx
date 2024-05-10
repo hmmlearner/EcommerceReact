@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import CartContext from "../../context/cart-context";
 import agent from "../../api/agent";
 //import { loadStripe } from "@stripe/stripe-js";
 //import {
@@ -13,7 +14,7 @@ const OrderConfirmation = () => {
     //const stripe = useStripe();
     //const elements = useElements();
     const [message, setMessage] = useState(null);
-
+    const cartCtx = useContext(CartContext);
 
    // setMessage(clientSecret);
    // console.log(clientSecret);
@@ -32,7 +33,7 @@ const OrderConfirmation = () => {
         }
 
     };
-
+    cartCtx.clearCart();
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);

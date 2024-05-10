@@ -129,6 +129,7 @@ const CartProvider = (props) => {
     const [cartState, cartDispatch] = useReducer(cartReducer, initialState);
 
     const fetchCartData = async () => {
+        console.log("in fetchCartData CartProvider");
         try {
             if (getAuthToken() !== null) {
                 const response = await agent.Cart.retrieveCart();

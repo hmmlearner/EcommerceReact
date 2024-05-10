@@ -1,8 +1,8 @@
 //create Cart component to display cart page in reactimport React from 'react';
 
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import CustomerContext from '../../context/customer-context';
-import { setAuthToken } from "../../utils/AuthService";
+import { setAuthToken, getAuthToken } from "../../utils/AuthService";
 import agent from "../../api/agent";
 import CartContext from "../../context/cart-context";
 import classes from "./Login.module.css";
@@ -33,7 +33,7 @@ const Login = ({ loginClose }) => {
         try {
             const responsePromise = await authenticateCustomer(formData.username, formData.password);
             data = await responsePromise;
-            console.log('Data outside data:', data);
+            console.log('Data outside data:', JSON.stringify(data));
 
         } catch (error) {
             console.error('Error outside async/await:', error);
@@ -45,6 +45,8 @@ const Login = ({ loginClose }) => {
         cartCtx.retrieveCartData();
         loginClose();
     };
+
+
 
 
 
