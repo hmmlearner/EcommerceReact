@@ -1,0 +1,50 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET Web API for Cinema Management
+
+env:
+  DOTNET_VERSION: '7.0.x'                 # set this to the .NET Core version to use
+  WORKING_DIRECTORY: EcommerceReact
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3      
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore ./EcommerceReact.sln
+      
+    - name: Install EF Tool
+      run: |
+            dotnet new tool-manifest
+            dotnet tool install dotnet-ef
+      
+    - name: Build
+      run: dotnet build ./EcommerceReact.sln --configuration Release --no-restore
+
+    - name: Generate scripts
+      run: |
+           cd CinemaManagement
+           dir
+           dotnet ef migrations script --output ${{env.WORKING_DIRECTORY}}\sql-script.sql --idempotent --context DataContext --configuration Release --no-build
+    - name: listfiles
+      run: dir ${{env.WORKING_DIRECTORY}}\EcommerceReact
+      
+      
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
