@@ -1,10 +1,11 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET Web API for Cinema Management
+name: .NET React for Ecommerce
 
 env:
   DOTNET_VERSION: '7.0.x'                 # set this to the .NET Core version to use
+  NODE-VERSION: '18.x'
   WORKING_DIRECTORY: EcommerceReact
 
 on:
@@ -25,6 +26,11 @@ jobs:
       uses: actions/setup-dotnet@v3      
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Use Node.js ${{ env.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.node-version }}
         
     - name: Restore dependencies
       run: dotnet restore ./EcommerceReact.sln
@@ -43,8 +49,8 @@ jobs:
            dir
            dotnet ef migrations script --output ${{env.WORKING_DIRECTORY}}\sql-script.sql --idempotent --context DataContext --configuration Release --no-build
     - name: listfiles
-      run: dir ${{env.WORKING_DIRECTORY}}\EcommerceReact
+      run: dir ${{env.WORKING_DIRECTORY}}\
       
       
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --configuration Release --verbosity normal
