@@ -92,7 +92,7 @@ jobs:
           # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
           server-name: ${{ secrets.DBSERVER }}
           # The connection string, including authentication information, for the Azure SQL Server database.
-          connection-string: ${{ secrets.CONNECTION_STRING }}
+          connection-string: ${{ secrets.CONNECTIONSTRING }}
           # Path to SQL script file to deploy
           sql-file: ${{env.WORKING_DIRECTORY}}\sql-script.sql          
 
