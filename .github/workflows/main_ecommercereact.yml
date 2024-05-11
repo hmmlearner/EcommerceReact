@@ -38,7 +38,7 @@ jobs:
       - name: Install EF Tool
         run: |
             dotnet new tool-manifest
-            dotnet tool install dotnet-ef
+            dotnet tool install dotnet-ef --version 7.0.0
 
       - name: Install NPM Dependencies
         run: |
