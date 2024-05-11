@@ -86,6 +86,9 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F1747D4D84B14EBEBB9EF9BB0968F65E }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E191C42CE7B14E5BA08A14F900347ED8 }}
 
+      - name: listfiles
+        run: dir 
+
       - name: Azure SQL Deploy
         uses: Azure/sql-action@v1
         with:
@@ -94,7 +97,7 @@ jobs:
           # The connection string, including authentication information, for the Azure SQL Server database.
           connection-string: ${{ secrets.CONNECTIONSTRING }}
           # Path to SQL script file to deploy
-          sql-file: EcommerceReact.Server\${{env.WORKING_DIRECTORY}}\sql-script.sql          
+          sql-file: sql-script.sql          
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
