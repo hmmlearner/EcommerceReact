@@ -52,24 +52,9 @@ jobs:
         run: |
            cd EcommerceReact.Server
            dir
-           dotnet ef migrations script --output ${{env.WORKING_DIRECTORY}}\sql-script.sql --idempotent --context DataContext --configuration Release --no-build
+           dotnet ef migrations script --output ${{env.AZURE_WEBAPP_PACKAGE_PATH}}\sql-script.sql --idempotent --context DataContext --configuration Release --no-build
       
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1F3AF1F3CFCD470782974EAFF32BD38C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F1747D4D84B14EBEBB9EF9BB0968F65E }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E191C42CE7B14E5BA08A14F900347ED8 }}
 
-      - name: Azure SQL Deploy
-        uses: Azure/sql-action@v1
-        with:
-          # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
-          server-name: ecommercewindows-server.database.windows.net
-          # The connection string, including authentication information, for the Azure SQL Server database.
-          connection-string: ${{ secrets.CONNECTION_STRING }}
-          # Path to SQL script file to deploy
-          sql-file: ${{env.WORKING_DIRECTORY}}\sql-script.sql
 
       - name: dotnet publish
         run: dotnet publish ./EcommerceReact.sln -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}} 
@@ -105,7 +90,16 @@ jobs:
 
       - name: listfiles
         run: dir 
-    
+      
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v1
+        with:
+          # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
+          server-name: ecommercewindows-server.database.windows.net
+          # The connection string, including authentication information, for the Azure SQL Server database.
+          connection-string: ${{ secrets.CONNECTION_STRING }}
+          # Path to SQL script file to deploy
+          sql-file: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}\sql-script.sql
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
