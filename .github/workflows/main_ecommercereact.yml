@@ -33,7 +33,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Restore
-        run: dotnet restore ./Ecommerce.sln
+        run: dotnet restore ./EcommerceReact.sln
 
       - name: Install EF Tool
         run: |
