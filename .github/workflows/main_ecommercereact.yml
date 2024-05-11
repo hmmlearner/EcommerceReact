@@ -90,6 +90,10 @@ jobs:
 
       - name: listfiles
         run: dir 
+      - name: listfiles2
+        run: |
+             cd wwwroot
+             dir
       
       - name: Azure SQL Deploy
         uses: Azure/sql-action@v1
