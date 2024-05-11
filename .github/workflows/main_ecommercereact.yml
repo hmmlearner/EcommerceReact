@@ -96,5 +96,5 @@ jobs:
         with:
           app-name: 'EcommerceReact'
           slot-name: 'Production'
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: .
           
