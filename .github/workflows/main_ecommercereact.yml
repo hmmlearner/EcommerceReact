@@ -88,16 +88,7 @@ jobs:
 
       - name: listfiles
         run: dir 
-
-      - name: Azure SQL Deploy
-        uses: Azure/sql-action@v1
-        with:
-          # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
-          server-name: ${{ secrets.DBSERVER }}
-          # The connection string, including authentication information, for the Azure SQL Server database.
-          connection-string: ${{ secrets.CONNECTIONSTRING }}
-          # Path to SQL script file to deploy
-          sql-file: sql-script.sql          
+    
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
