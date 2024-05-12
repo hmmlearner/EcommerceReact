@@ -1,0 +1,115 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - EcommerceReact
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: .\published      # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '7.0.x'                 # set this to the .NET Core version to use
+  NODE-VERSION: '18.x'
+  WORKING_DIRECTORY: EcommerceReact
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          include-prerelease: true
+     
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Restore
+        run: dotnet restore ./EcommerceReact.sln
+
+      - name: Install EF Tool
+        run: |
+            dotnet new tool-manifest
+            dotnet tool install dotnet-ef --version 7.0.0
+
+      - name: Install NPM Dependencies
+        run: |
+           cd ecommercereact.client
+           npm i -f        
+
+      - name: Build with dotnet
+        run: dotnet build ./EcommerceReact.sln --configuration Release
+
+      - name: Generate scripts         
+        run: |
+           cd EcommerceReact.Server
+           dir
+           dotnet ef migrations script --output ${{env.AZURE_WEBAPP_PACKAGE_PATH}}\sql-script.sql --idempotent --context DataContext --configuration Release --no-build
+      
+
+
+      - name: dotnet publish
+        run: dotnet publish ./EcommerceReact.sln -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}} 
+        id: publish_output     
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-app
+          path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}} 
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1F3AF1F3CFCD470782974EAFF32BD38C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F1747D4D84B14EBEBB9EF9BB0968F65E }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E191C42CE7B14E5BA08A14F900347ED8 }}
+
+      - name: listfiles
+        run: dir 
+      - name: listfiles2
+        run: |
+             cd wwwroot
+             dir
+      
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v1
+        with:
+          # Name of the Azure SQL Server name, like Fabrikam.database.windows.net.
+          server-name: ecommercewindows-server.database.windows.net
+          # The connection string, including authentication information, for the Azure SQL Server database.
+          connection-string: ${{ secrets.CONNECTIONSTRING }}
+          # Path to SQL script file to deploy
+          sql-file: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}\sql-script.sql
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'EcommerceReact'
+          slot-name: 'Production'
+          package: .
+          

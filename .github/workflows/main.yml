@@ -40,7 +40,12 @@ jobs:
       run: |
             dotnet new tool-manifest
             dotnet tool install dotnet-ef
-      
+            
+    - name: Install NPM Dependencies
+      run: |
+           cd ecommercereact.client
+           npm i -f        
+          
     - name: Build
       run: dotnet build ./EcommerceReact.sln --configuration Release --no-restore
 
@@ -49,8 +54,8 @@ jobs:
            cd EcommerceReact.Server
            dir
            dotnet ef migrations script --output ${{env.WORKING_DIRECTORY}}\sql-script.sql --idempotent --context DataContext --configuration Release --no-build
-    - name: listfiles
-      run: dir ${{env.WORKING_DIRECTORY}}\
+    #- name: listfiles
+    #  run: dir ${{env.WORKING_DIRECTORY}}\
                  
     - name: Test
       run: dotnet test --no-build --verbosity normal
